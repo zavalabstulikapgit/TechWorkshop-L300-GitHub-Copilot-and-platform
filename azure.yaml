@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: zavastore
+metadata:
+  template: zavastore@0.0.1
+
+# Services to deploy
+services:
+  web:
+    project: ./src
+    language: csharp
+    host: appservice
+
+# Infrastructure configuration
+infra:
+  provider: bicep
+  path: ./infra
+  module: main
+
+# Hooks for custom deployment steps
+hooks:
+  preprovision:
+    posix:
+      shell: sh
+      run: echo "Preparing to provision Azure resources..."
+    windows:
+      shell: pwsh
+      run: Write-Host "Preparing to provision Azure resources..."
+  
+  postprovision:
+    posix:
+      shell: sh
+      run: |
+        echo "Azure resources provisioned successfully"
+        echo "Container Registry: $(azd env get-value AZURE_CONTAINER_REGISTRY_NAME)"
+    windows:
+      shell: pwsh
+      run: |
+        Write-Host "Azure resources provisioned successfully"
+        Write-Host "Container Registry: $(azd env get-value AZURE_CONTAINER_REGISTRY_NAME)"
+
+  predeploy:
+    posix:
+      shell: sh
+      run: |
+        echo "Building and pushing container image..."
+        REGISTRY_NAME=$(azd env get-value AZURE_CONTAINER_REGISTRY_NAME)
+        az acr build --registry $REGISTRY_NAME --image zavastore:latest ./src
+    windows:
+      shell: pwsh
+      run: |
+        Write-Host "Building and pushing container image..."
+        $registryName = azd env get-value AZURE_CONTAINER_REGISTRY_NAME
+        az acr build --registry $registryName --image zavastore:latest ./src
+
+  postdeploy:
+    posix:
+      shell: sh
+      run: |
+        echo "Deployment completed!"
+        echo "Application URL: $(azd env get-value SERVICE_WEB_ENDPOINT)"
+    windows:
+      shell: pwsh
+      run: |
+        Write-Host "Deployment completed!"
+        Write-Host "Application URL: $(azd env get-value SERVICE_WEB_ENDPOINT)"

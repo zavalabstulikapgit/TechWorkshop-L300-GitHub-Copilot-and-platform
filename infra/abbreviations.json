@@ -1,0 +1,13 @@
+{
+  "resources": {
+    "resourceGroup": "rg",
+    "containerRegistry": "acr",
+    "appServicePlan": "asp",
+    "appService": "app",
+    "applicationInsights": "appi",
+    "logAnalyticsWorkspace": "log",
+    "aiServicesAccount": "ai",
+    "userAssignedIdentity": "id",
+    "roleAssignment": "role"
+  }
+}
