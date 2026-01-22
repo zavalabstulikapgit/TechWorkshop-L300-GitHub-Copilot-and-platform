@@ -9,7 +9,7 @@ param location string
 param friendlyName string = name
 
 @description('The description for the AI Foundry hub')
-param description string = 'AI Foundry hub for ZavaStorefront'
+param hubDescription string = 'AI Foundry hub for ZavaStorefront'
 
 @description('Storage account ID for the hub')
 param storageAccountId string
@@ -35,7 +35,7 @@ resource aiFoundryHub 'Microsoft.MachineLearningServices/workspaces@2024-04-01' 
   }
   properties: {
     friendlyName: friendlyName
-    description: description
+    description: hubDescription
     storageAccount: storageAccountId
     keyVault: keyVaultId
     applicationInsights: applicationInsightsId

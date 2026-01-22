@@ -13,9 +13,6 @@ param namePrefix string = 'zavastore'
 @description('The Docker image tag to deploy')
 param dockerImageTag string = 'latest'
 
-@description('The ID of the principal deploying this template')
-param principalId string = ''
-
 var resourceGroupName = 'rg-${namePrefix}-${environmentName}-${location}'
 var acrName = replace('acr${namePrefix}${environmentName}${location}', '-', '')
 var appServicePlanName = 'asp-${namePrefix}-${environmentName}-${location}'
@@ -146,7 +143,7 @@ module aiFoundry 'modules/aiFoundry.bicep' = {
     name: aiFoundryName
     location: location
     friendlyName: 'ZavaStorefront AI Foundry Hub'
-    description: 'AI Foundry hub for ZavaStorefront application with GPT-4 and Phi models'
+    hubDescription: 'AI Foundry hub for ZavaStorefront application with GPT-4 and Phi models'
     storageAccountId: storageAccount.outputs.id
     keyVaultId: keyVault.outputs.id
     applicationInsightsId: appInsights.outputs.id
