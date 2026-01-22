@@ -2,7 +2,7 @@
 # Bicep Validation Script
 # This script validates all Bicep templates for syntax and best practices
 
-set -e
+set -euo pipefail
 
 echo "🔍 Validating Bicep Templates..."
 echo ""

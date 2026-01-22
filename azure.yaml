@@ -9,7 +9,7 @@ services:
   web:
     project: ./src
     language: dotnet
-    host: containerapp
+    host: appservice
     docker:
       path: ./src/Dockerfile
       context: ./src
