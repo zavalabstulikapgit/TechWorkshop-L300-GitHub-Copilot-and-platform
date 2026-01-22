@@ -111,6 +111,8 @@ secrets.json
 *.temp
 *.swp
 *~
+*.backup
+*.bak
 
 # Editors
 *~.nib

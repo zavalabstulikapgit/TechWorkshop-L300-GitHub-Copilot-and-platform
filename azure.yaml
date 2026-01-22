@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: zavastore
+metadata:
+  template: zavastore@0.0.1-beta
+
+# Services to deploy
+services:
+  web:
+    project: ./src
+    language: dotnet
+    host: appservice
+    docker:
+      path: ./src/Dockerfile
+      context: ./src
+
+# Infrastructure configuration
+infra:
+  provider: bicep
+  path: infra
+  module: main
+
+# Hooks for custom commands
+hooks:
+  # Pre-provision hook to ensure prerequisites
+  preprovision:
+    posix:
+      shell: sh
+      run: echo "Starting provision..."
+    windows:
+      shell: pwsh
+      run: echo "Starting provision..."
+  
+  # Post-provision hook to build and push Docker image
+  postprovision:
+    posix:
+      shell: sh
+      run: |
+        echo "Building and pushing Docker image to ACR..."
+        ACR_NAME=$(azd env get-value ACR_NAME)
+        if [ -z "$ACR_NAME" ]; then
+          echo "Error: ACR_NAME not found in environment"
+          exit 1
+        fi
+        az acr build --registry $ACR_NAME --image zavastore:latest ./src
+    windows:
+      shell: pwsh
+      run: |
+        Write-Host "Building and pushing Docker image to ACR..."
+        $ACR_NAME = azd env get-value ACR_NAME
+        if ([string]::IsNullOrEmpty($ACR_NAME)) {
+          Write-Host "Error: ACR_NAME not found in environment"
+          exit 1
+        }
+        az acr build --registry $ACR_NAME --image zavastore:latest ./src
